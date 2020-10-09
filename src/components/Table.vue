@@ -7,7 +7,7 @@
             <v-list-item-title v-text="person.name"></v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon>
-            <v-btn @click="deleteRow(index)">
+            <v-btn @click="shouldDelete(index)">
               <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
           </v-list-item-icon>
@@ -25,13 +25,15 @@ export default {
     };
   },
   methods: {
-    deleteRow: function (index) {
-      this.$store.commit("removePerson", index);
+    shouldDelete: function (index) {
+      this.deleteRow(index);
     },
   },
   mounted() {
-    console.log("mounted");
     this.persons = this.$store.getters.persons;
+  },
+  props: {
+    deleteRow: Function,
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table />
+    <Table :deleteRow="deleteRow" />
     <PersonInput :addUser="addUser" class="mt-10" v-if="isAdding" />
     <v-btn @click="showAddView" class="mt-10" v-if="!isAdding">
       <v-icon left large color="green">mdi-plus-circle</v-icon>
@@ -26,20 +26,12 @@ export default {
   methods: {
     showAddView: function () {
       this.isAdding = true;
-      // this.persons.push({
-      //   selectedIndex: [],
-      // });
-      // console.log(this.$refs);
-      // this.$nextTick(function () {
-      //   const index = this.persons.length - 1;
-      //   this.$refs[index][0].focus();
-      // });
     },
     addUser: function (user) {
       this.$store.commit("addPerson", user);
     },
     deleteRow: function (index) {
-      this.persons.splice(index, 1);
+      this.$store.commit("removePerson", index);
     },
   },
   // firestore: {
