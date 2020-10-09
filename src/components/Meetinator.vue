@@ -26,7 +26,6 @@
                 :ref="index"
                 :value="person.name"
               >
-                Kerstin
               </v-text-field>
             </td>
             <td>
@@ -69,12 +68,22 @@
 </template>
 
 <script>
-import { db } from '../firebaseDatabase'
+// import { db } from '../firebaseDatabase'
 
 export default {
   data() {
     return {
-      persons: []
+      persons: [
+        {
+          name: "Kerstin",
+        },
+        {
+          name: "Pete",
+        },
+        {
+          name: "Corinna",
+        }
+      ]
     }
   },
   methods: {
@@ -92,8 +101,8 @@ export default {
       this.persons.splice(index, 1)
     },
   },
-  firestore: {
-    persons: db.collection('persons')
-  }
+  // firestore: {
+  //   persons: db.collection('persons')
+  // }
 }
 </script>
