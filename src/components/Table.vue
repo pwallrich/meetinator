@@ -21,24 +21,17 @@
 export default {
   data() {
     return {
-      persons: [
-        {
-          name: "Kerstin",
-        },
-        {
-          name: "Pete",
-        },
-        {
-          name: "Corinna",
-        },
-      ],
+      persons: [],
     };
   },
   methods: {
     deleteRow: function (index) {
-      console.log("deleteRow");
-      this.persons.splice(index, 1);
+      this.$store.commit("removePerson", index);
     },
+  },
+  mounted() {
+    console.log("mounted");
+    this.persons = this.$store.getters.persons;
   },
 };
 </script>
