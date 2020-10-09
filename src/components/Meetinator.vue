@@ -1,10 +1,10 @@
 <template>
   <div>
     <Table />
-    <v-divider class="mt-10 mb-10"></v-divider>
-    <v-btn @click="addRow">
+    <PersonInput class="mt-10" v-if="isAdding" />
+    <v-btn @click="addRow" class="mt-10" v-if="!isAdding">
       <v-icon left large color="green">mdi-plus-circle</v-icon>
-      neuen Eintrag hinzufügen
+      Teilnehmen
     </v-btn>
   </div>
 </template>
@@ -12,23 +12,28 @@
 <script>
 // import { db } from '../firebaseDatabase'
 import Table from "./Table";
+import PersonInput from "./PersonInput";
 export default {
   components: {
     Table,
+    PersonInput,
   },
   data() {
-    return {};
+    return {
+      isAdding: false,
+    };
   },
   methods: {
     addRow: function () {
-      this.persons.push({
-        selectedIndex: [],
-      });
-      console.log(this.$refs);
-      this.$nextTick(function () {
-        const index = this.persons.length - 1;
-        this.$refs[index][0].focus();
-      });
+      this.isAdding = true;
+      // this.persons.push({
+      //   selectedIndex: [],
+      // });
+      // console.log(this.$refs);
+      // this.$nextTick(function () {
+      //   const index = this.persons.length - 1;
+      //   this.$refs[index][0].focus();
+      // });
     },
     deleteRow: function (index) {
       this.persons.splice(index, 1);
