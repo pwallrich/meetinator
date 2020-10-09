@@ -4,7 +4,9 @@
       <v-text-field label="Name" v-model="name" ref="input"></v-text-field>
     </v-col>
     <v-col cols="3" sm="3" md="3">
-      <v-btn block @click="submit()"> Teilnehmen </v-btn>
+      <v-btn block @click="submit()" :disabled="name.length <= 0">
+        Teilnehmen
+      </v-btn>
     </v-col>
   </v-row>
 </template>
