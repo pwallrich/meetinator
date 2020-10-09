@@ -20,6 +20,9 @@ export const store = new Vuex.Store({
   mutations: {
     removePerson(state, index) {
       state.persons.splice(index, 1)
+    },
+    addPerson(state, person) {
+      state.persons.push(person)
     }
   },
   getters: {

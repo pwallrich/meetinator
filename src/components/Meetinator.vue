@@ -1,8 +1,8 @@
 <template>
   <div>
     <Table />
-    <PersonInput class="mt-10" v-if="isAdding" />
-    <v-btn @click="addRow" class="mt-10" v-if="!isAdding">
+    <PersonInput :addUser="addUser" class="mt-10" v-if="isAdding" />
+    <v-btn @click="showAddView" class="mt-10" v-if="!isAdding">
       <v-icon left large color="green">mdi-plus-circle</v-icon>
       Teilnehmen
     </v-btn>
@@ -24,7 +24,7 @@ export default {
     };
   },
   methods: {
-    addRow: function () {
+    showAddView: function () {
       this.isAdding = true;
       // this.persons.push({
       //   selectedIndex: [],
@@ -34,6 +34,9 @@ export default {
       //   const index = this.persons.length - 1;
       //   this.$refs[index][0].focus();
       // });
+    },
+    addUser: function (user) {
+      this.$store.commit("addPerson", user);
     },
     deleteRow: function (index) {
       this.persons.splice(index, 1);
