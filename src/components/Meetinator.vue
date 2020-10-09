@@ -1,9 +1,17 @@
 <template>
   <div>
-    <Table :deleteRow="deleteRow" :items="persons" />
-    <PersonInput :addUser="addUser" class="mt-10" v-if="isAdding" />
+    <div v-for="n in splitPersons" :key="n.name">
+      <Table
+        :deleteRow="deleteRow"
+        :items="n"
+        :splitAfter="splitAfter"
+        :splitLabel="splitLabel"
+        class="mb-5"
+      />
+    </div>
+    <PersonInput :addUser="addUser" v-if="isAdding" />
 
-    <v-btn @click="showAddView" class="mt-10" v-if="!isAdding && canAddPerson">
+    <v-btn @click="showAddView" v-if="!isAdding && canAddPerson">
       <v-icon left large color="green">mdi-plus-circle</v-icon>
       Teilnehmen
     </v-btn>
@@ -32,7 +40,12 @@ export default {
     return {
       isAdding: false,
       persons: [],
+      splitPersons: [],
       canAddPerson: true,
+      splitAfter: 3,
+      splitLabel: "Kurs",
+      numberOfClases: 2,
+      currentNumberOfClasses: 1,
     };
   },
   methods: {
@@ -46,6 +59,16 @@ export default {
     deleteRow: function (index) {
       this.$store.commit("removePerson", index);
     },
+    updateTable: function () {
+      var i,
+        j = this.splitAfter;
+
+      this.splitPersons = [];
+
+      for (i = 0, j = this.persons.length; i < j; i += this.splitAfter) {
+        this.splitPersons.push(this.persons.slice(i, i + this.splitAfter));
+      }
+    },
   },
   computed: {
     personsComp() {
@@ -54,11 +77,17 @@ export default {
   },
   watch: {
     personsComp(newPersons) {
-      this.canAddPerson = newPersons.length < 5;
+      this.canAddPerson =
+        newPersons.length < this.splitAfter * this.numberOfClases;
+      this.currentNumberOfClasses =
+        parseInt(newPersons.length / this.splitAfter) + 1;
+
+      this.updateTable();
     },
   },
   mounted() {
     this.persons = this.$store.getters.persons;
+    this.updateTable();
   },
 };
 </script>
