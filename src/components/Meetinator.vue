@@ -1,13 +1,8 @@
 <template>
   <div>
-    <div v-for="n in splitPersons" :key="n.name">
-      <Table
-        :deleteRow="deleteRow"
-        :items="n"
-        :splitAfter="splitAfter"
-        :splitLabel="splitLabel"
-        class="mb-5"
-      />
+    <div v-for="(persons, index) in splitPersons" :key="index">
+      <v-chip label> Kurs {{ index + 1 }} </v-chip>
+      <Table :deleteRow="deleteRow" :items="persons" class="mb-5" />
     </div>
     <PersonInput :addUser="addUser" v-if="isAdding" />
 
@@ -43,7 +38,6 @@ export default {
       splitPersons: [],
       canAddPerson: true,
       splitAfter: 3,
-      splitLabel: "Kurs",
       numberOfClases: 2,
       currentNumberOfClasses: 1,
     };

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <v-chip label> {{ splitLabel }} 1 </v-chip>
     <v-card class="mx-auto" tile>
       <v-list>
         <v-list-item-group color="primary">
@@ -34,8 +33,6 @@ export default {
   props: {
     deleteRow: Function,
     items: Array,
-    splitAfter: Number,
-    splitLabel: String,
   },
 };
 </script>
