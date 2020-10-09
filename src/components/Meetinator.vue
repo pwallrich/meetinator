@@ -69,23 +69,12 @@
 </template>
 
 <script>
+import { db } from '../firebaseDatabase'
+
 export default {
   data() {
     return {
-      persons: [
-        {
-          name: "Kerstin",
-          selectedIndex: [],
-        },
-        {
-          name: "Kerstin 2",
-          selectedIndex: [0],
-        },
-        {
-          name: "Kerstin 3",
-          selectedIndex: [1],
-        }
-      ]
+      persons: []
     }
   },
   methods: {
@@ -101,7 +90,10 @@ export default {
     },
     deleteRow: function(index) {
       this.persons.splice(index, 1)
-    }
+    },
+  },
+  firestore: {
+    persons: db.collection('persons')
   }
 }
 </script>
