@@ -2,9 +2,9 @@
   <v-card class="mx-auto" tile>
     <v-list>
       <v-list-item-group color="primary">
-        <v-list-item v-for="(person, index) in persons" :key="person.name">
+        <v-list-item v-for="(item, index) in items" :key="item.name">
           <v-list-item-content>
-            <v-list-item-title v-text="person.name"></v-list-item-title>
+            <v-list-item-title v-text="item.name"></v-list-item-title>
           </v-list-item-content>
           <v-list-item-icon>
             <v-btn @click="shouldDelete(index)">
@@ -20,20 +20,17 @@
 <script>
 export default {
   data() {
-    return {
-      persons: [],
-    };
+    return {};
   },
   methods: {
     shouldDelete: function (index) {
       this.deleteRow(index);
     },
   },
-  mounted() {
-    this.persons = this.$store.getters.persons;
-  },
+  mounted() {},
   props: {
     deleteRow: Function,
+    items: Array,
   },
 };
 </script>
