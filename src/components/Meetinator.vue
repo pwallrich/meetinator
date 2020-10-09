@@ -1,7 +1,10 @@
 <template>
   <div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip label> Kurs {{ index + 1 }} </v-chip>
+      <v-chip label v-if="numberOfClases > 1"> Kurs {{ index + 1 }} </v-chip>
+      <v-chip label class="ml-3">
+        {{ persons.length }} / {{ splitAfter }} Personen angemeldet
+      </v-chip>
       <Table :deleteRow="deleteRow" :items="persons" class="mb-5" />
     </div>
     <PersonInput :addUser="addUser" v-if="isAdding" />
