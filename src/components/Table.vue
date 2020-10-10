@@ -3,12 +3,12 @@
     <v-card class="mx-auto" tile>
       <v-list>
         <v-list-item-group color="primary">
-          <v-list-item v-for="(item, index) in items" :key="item.name">
+          <v-list-item v-for="(item, index) in items" :key="index">
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
             <v-list-item-icon>
-              <v-btn @click="shouldDelete(index + offset)">
+              <v-btn @click="shouldDelete(index)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-list-item-icon>
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     shouldDelete: function (index) {
-      this.deleteRow(index);
+      this.deleteRow(index, this.offset);
     },
   },
   mounted() {},

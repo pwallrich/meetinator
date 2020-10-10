@@ -21,7 +21,6 @@ export default {
   components: {
     Meetinator,
   },
-
   data: () => ({
     splitAfter: 4,
     numberOfClasses: 2,

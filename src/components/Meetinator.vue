@@ -16,7 +16,7 @@
         {{ persons.length }} / {{ splitAfter }} Personen angemeldet
       </v-chip>
       <Table
-        :offset="index * splitAfter"
+        :offset="index"
         :deleteRow="deleteRow"
         :items="persons"
         class="mb-5"
@@ -36,10 +36,7 @@ export default {
   data() {
     return {
       isAdding: false,
-      // persons: [],
       splitPersons: [],
-      // canAddPerson: true,
-      // currentNumberOfClasses: 1,
     };
   },
   props: {
@@ -54,8 +51,9 @@ export default {
       this.$store.dispatch("addPerson", user);
       this.isAdding = false;
     },
-    deleteRow: function (index) {
-      this.$store.dispatch("removePerson", this.persons[index]);
+    deleteRow: function (index, offset) {
+      const indexToDelete = index + offset * this.splitAfter;
+      this.$store.dispatch("removePersonAt", indexToDelete);
     },
     updateTable: function () {
       var i,
@@ -88,9 +86,6 @@ export default {
     persons() {
       this.updateTable();
     },
-  },
-  mounted() {
-    // this.updateTable();
   },
 };
 </script>

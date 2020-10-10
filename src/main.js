@@ -12,9 +12,16 @@ import * as fb from './firebaseDatabase'
 fb.personsCollection.onSnapshot(snapshot => {
   let personsArray = []
   snapshot.forEach(doc => {
-    let person = doc.data()
-    person.id = doc.id
-    personsArray.push(person)
+    if (doc.id === "lno4r0VzSMdf6KrFMFPO") {
+      let persons = doc.data().persons
+      persons.forEach(personMap => {
+        let person = {
+          id: personMap.id,
+          name: personMap.name
+        }
+        personsArray.push(person)
+      })
+    }
   })
   store.commit('setPersons', personsArray)
 })

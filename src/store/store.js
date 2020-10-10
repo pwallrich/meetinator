@@ -25,7 +25,17 @@ export const store = new Vuex.Store({
   },
   actions: {
     async addPerson(_, person) {
-      await fb.personsCollection.add(person)
+      let persons = this.state.persons.map((abc) => {
+        return {
+          name: abc.name,
+        }
+      })
+      persons.push(person)
+      await fb.personsCollection
+        .doc("lno4r0VzSMdf6KrFMFPO")
+        .update({
+          persons: persons
+        })
         .then(() => {
           console.log("Document successfully written!");
         })
@@ -33,10 +43,18 @@ export const store = new Vuex.Store({
           console.error("Error writing document: ", error);
         });
     },
-    async removePerson(_, person) {
+    async removePersonAt(_, indexToDelete) {
+      let persons = this.state.persons.map((abc) => {
+        return {
+          name: abc.name,
+        }
+      })
+      persons.splice(indexToDelete, 1)
       await fb.personsCollection
-        .doc(person.id)
-        .delete()
+        .doc("lno4r0VzSMdf6KrFMFPO")
+        .update({
+          persons: persons
+        })
         .then(() => {
           console.log("Document successfully deleted!");
         })
