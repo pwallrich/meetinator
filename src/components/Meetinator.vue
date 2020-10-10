@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="input mb-5">
+      <PersonInput :addUser="addUser" v-if="isAdding" />
+      <v-btn @click="showAddView" v-if="!isAdding && canAddPerson">
+        <v-icon left large color="green">mdi-plus-circle</v-icon>
+        Teilnehmen
+      </v-btn>
+      <v-alert border="top" color="red lighten-2" v-if="!canAddPerson" dark>
+        Leider sind die Kurse schon voll
+      </v-alert>
+    </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
       <v-chip label v-if="numberOfClasses > 1"> Kurs {{ index + 1 }} </v-chip>
       <v-chip label class="ml-3">
@@ -7,22 +17,6 @@
       </v-chip>
       <Table :deleteRow="deleteRow" :items="persons" class="mb-5" />
     </div>
-    <PersonInput :addUser="addUser" v-if="isAdding" />
-
-    <v-btn @click="showAddView" v-if="!isAdding && canAddPerson">
-      <v-icon left large color="green">mdi-plus-circle</v-icon>
-      Teilnehmen
-    </v-btn>
-
-    <v-alert
-      border="top"
-      color="red lighten-2"
-      class="mt-10"
-      v-if="!canAddPerson"
-      dark
-    >
-      Leider sind die Kurse schon voll
-    </v-alert>
   </div>
 </template>
 
