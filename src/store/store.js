@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import * as fb from '../firebaseDatabase'
+import db from '../Data/Database'
 
 Vue.use(Vuex)
 
@@ -31,17 +31,7 @@ export const store = new Vuex.Store({
         }
       })
       persons.push(person)
-      await fb.personsCollection
-        .doc("lno4r0VzSMdf6KrFMFPO")
-        .update({
-          persons: persons
-        })
-        .then(() => {
-          console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        });
+      db.updatePersons(persons)
     },
     async removePersonAt(_, indexToDelete) {
       let persons = this.state.persons.map((abc) => {
@@ -50,17 +40,7 @@ export const store = new Vuex.Store({
         }
       })
       persons.splice(indexToDelete, 1)
-      await fb.personsCollection
-        .doc("lno4r0VzSMdf6KrFMFPO")
-        .update({
-          persons: persons
-        })
-        .then(() => {
-          console.log("Document successfully deleted!");
-        })
-        .catch((error) => {
-          console.error("Error removing document: ", error);
-        });
+      db.updatePersons(persons)
     }
   }
 })
