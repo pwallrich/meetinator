@@ -5,17 +5,7 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    persons: [
-      {
-        name: "Kerstin",
-      },
-      {
-        name: "Pete",
-      },
-      {
-        name: "Corinna",
-      }
-    ]
+    persons: []
   },
   mutations: {
     removePerson(state, index) {
@@ -23,6 +13,9 @@ export const store = new Vuex.Store({
     },
     addPerson(state, person) {
       state.persons.push(person)
+    },
+    setPersons(state, persons) {
+      state.persons = persons
     }
   },
   getters: {

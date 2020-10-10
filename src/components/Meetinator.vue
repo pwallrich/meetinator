@@ -31,10 +31,10 @@ export default {
   data() {
     return {
       isAdding: false,
-      persons: [],
+      // persons: [],
       splitPersons: [],
-      canAddPerson: true,
-      currentNumberOfClasses: 1,
+      // canAddPerson: true,
+      // currentNumberOfClasses: 1,
     };
   },
   props: {
@@ -63,25 +63,29 @@ export default {
     },
   },
   computed: {
-    personsComp() {
-      return this.$store.getters.persons;
+    persons: {
+      get() {
+        return this.$store.getters.persons;
+      },
+    },
+    canAddPerson: {
+      get() {
+        return this.persons.length < this.splitAfter * this.numberOfClasses;
+      },
+    },
+    currentNumberOfClasses: {
+      get() {
+        return parseInt(this.persons.length / this.splitAfter) + 1;
+      },
     },
   },
   watch: {
-    personsComp(newPersons) {
-      this.canAddPerson =
-        newPersons.length < this.splitAfter * this.numberOfClasses;
-      console.log(this.splitAfter);
-      console.log(this.numberOfClasses);
-      this.currentNumberOfClasses =
-        parseInt(newPersons.length / this.splitAfter) + 1;
-
+    persons() {
       this.updateTable();
     },
   },
   mounted() {
-    this.persons = this.$store.getters.persons;
-    this.updateTable();
+    // this.updateTable();
   },
 };
 </script>
