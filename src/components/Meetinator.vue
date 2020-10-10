@@ -46,11 +46,11 @@ export default {
       this.isAdding = true;
     },
     addUser: function (user) {
-      this.$store.commit("addPerson", user);
+      this.$store.dispatch("addPerson", user);
       this.isAdding = false;
     },
     deleteRow: function (index) {
-      this.$store.commit("removePerson", index);
+      this.$store.dispatch("removePerson", this.persons[index]);
     },
     updateTable: function () {
       var i,
@@ -81,6 +81,7 @@ export default {
   },
   watch: {
     persons() {
+      console.log(this.persons);
       this.updateTable();
     },
   },

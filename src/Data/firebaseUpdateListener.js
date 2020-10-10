@@ -6,6 +6,7 @@ fb.personsCollection.onSnapshot(snapshot => {
     let personsArray = []
     snapshot.forEach(doc => {
         let person = doc.data()
+        person.id = doc.id
         personsArray.push(person)
     })
 
