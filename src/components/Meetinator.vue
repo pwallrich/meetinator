@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip label v-if="numberOfClases > 1"> Kurs {{ index + 1 }} </v-chip>
+      <v-chip label v-if="numberOfClasses > 1"> Kurs {{ index + 1 }} </v-chip>
       <v-chip label class="ml-3">
         {{ persons.length }} / {{ splitAfter }} Personen angemeldet
       </v-chip>
@@ -40,10 +40,12 @@ export default {
       persons: [],
       splitPersons: [],
       canAddPerson: true,
-      splitAfter: 3,
-      numberOfClases: 2,
       currentNumberOfClasses: 1,
     };
+  },
+  props: {
+    splitAfter: Number,
+    numberOfClasses: Number,
   },
   methods: {
     showAddView: function () {
@@ -61,7 +63,6 @@ export default {
         j = this.splitAfter;
 
       this.splitPersons = [];
-
       for (i = 0, j = this.persons.length; i < j; i += this.splitAfter) {
         this.splitPersons.push(this.persons.slice(i, i + this.splitAfter));
       }
@@ -75,7 +76,9 @@ export default {
   watch: {
     personsComp(newPersons) {
       this.canAddPerson =
-        newPersons.length < this.splitAfter * this.numberOfClases;
+        newPersons.length < this.splitAfter * this.numberOfClasses;
+      console.log(this.splitAfter);
+      console.log(this.numberOfClasses);
       this.currentNumberOfClasses =
         parseInt(newPersons.length / this.splitAfter) + 1;
 
