@@ -15,7 +15,12 @@
       <v-chip label class="ml-3">
         {{ persons.length }} / {{ splitAfter }} Personen angemeldet
       </v-chip>
-      <Table :deleteRow="deleteRow" :items="persons" class="mb-5" />
+      <Table
+        :offset="index * splitAfter"
+        :deleteRow="deleteRow"
+        :items="persons"
+        class="mb-5"
+      />
     </div>
   </div>
 </template>
@@ -81,7 +86,6 @@ export default {
   },
   watch: {
     persons() {
-      console.log(this.persons);
       this.updateTable();
     },
   },

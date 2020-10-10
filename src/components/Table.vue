@@ -8,7 +8,7 @@
               <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item-content>
             <v-list-item-icon>
-              <v-btn @click="shouldDelete(index)">
+              <v-btn @click="shouldDelete(index + offset)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-list-item-icon>
@@ -33,6 +33,7 @@ export default {
   props: {
     deleteRow: Function,
     items: Array,
+    offset: Number,
   },
 };
 </script>
