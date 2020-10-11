@@ -7,46 +7,52 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    persons: []
+    meeting: {},
   },
   mutations: {
     removePerson(state, index) {
-      state.persons.splice(index, 1)
+      state.meeting.persons.splice(index, 1)
     },
     addPerson(state, person) {
-      state.persons.push(person)
+      state.meeting.persons.push(person)
     },
     setPersons(state, persons) {
-      state.persons = persons
+      state.meeting.persons = persons
     }
   },
   getters: {
-    persons: state => state.persons
+    meeting: state => state.meeting,
   },
   actions: {
     async addPerson(_, person) {
-      let persons = this.state.persons.map((abc) => {
+      let meeting = this.state.meeting
+      let persons = meeting.persons.map((abc) => {
         return {
           name: abc.name,
         }
       })
       persons.push(person)
-      db.updatePersons(persons)
-      this.dispatch('fetchPersons')
+      meeting.persons = persons
+      await db.updateMeeting(meeting)
+      this.dispatch('getMeeting', this.state.meeting.id)
     },
     async removePersonAt(_, indexToDelete) {
-      let persons = this.state.persons.map((abc) => {
+      let meeting = this.state.meeting
+      let persons = meeting.persons.map((abc) => {
         return {
           name: abc.name,
         }
       })
       persons.splice(indexToDelete, 1)
-      db.updatePersons(persons)
-      this.dispatch('fetchPersons')
+      meeting.persons = persons
+      await db.updateMeeting(meeting)
+      this.dispatch('getMeeting', this.state.meeting.id)
     },
-    async fetchPersons() {
-      let ref = await db.getPersons()
-      this.state.persons = ref
+    async getMeeting(_, meetingId) {
+      let ref = await db.getMeeting(meetingId)
+      console.log("got meeting")
+      console.log(ref)
+      this.state.meeting = ref
     }
   }
 })

@@ -11,9 +11,12 @@
       </v-alert>
     </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip label v-if="numberOfClasses > 1"> Kurs {{ index + 1 }} </v-chip>
+      <v-chip label v-if="meeting.numberOfClasses > 1">
+        Kurs {{ index + 1 }}
+      </v-chip>
       <v-chip label class="ml-3">
-        {{ persons.length }} / {{ splitAfter }} Personen angemeldet
+        {{ meeting.persons.length }} / {{ meeting.splitAfter }} Personen
+        angemeldet
       </v-chip>
       <Table
         :offset="index"
@@ -40,8 +43,7 @@ export default {
     };
   },
   props: {
-    splitAfter: Number,
-    numberOfClasses: Number,
+    meetingId: String,
   },
   methods: {
     showAddView: function () {
@@ -52,44 +54,62 @@ export default {
       this.isAdding = false;
     },
     deleteRow: function (index, offset) {
-      const indexToDelete = index + offset * this.splitAfter;
+      const indexToDelete = index + offset * this.meeting.splitAfter;
       this.$store.dispatch("removePersonAt", indexToDelete);
     },
     updateTable: function () {
+      if (this.meeting === undefined) {
+        return;
+      }
       var i,
-        j = this.splitAfter;
+        j = this.meeting.splitAfter;
 
       this.splitPersons = [];
-      for (i = 0, j = this.persons.length; i < j; i += this.splitAfter) {
-        this.splitPersons.push(this.persons.slice(i, i + this.splitAfter));
+      for (
+        i = 0, j = this.meeting.persons.length;
+        i < j;
+        i += this.meeting.splitAfter
+      ) {
+        this.splitPersons.push(
+          this.meeting.persons.slice(i, i + this.meeting.splitAfter)
+        );
       }
     },
   },
   computed: {
-    persons: {
+    meeting: {
       get() {
-        return this.$store.getters.persons;
+        console.log("meeting");
+        return this.$store.getters.meeting;
       },
     },
     canAddPerson: {
       get() {
-        return this.persons.length < this.splitAfter * this.numberOfClasses;
+        if (this.meeting.persons !== undefined) {
+          return (
+            this.meeting.persons.length <
+            this.meeting.splitAfter * this.meeting.numberOfClasses
+          );
+        } else {
+          return false;
+        }
       },
     },
     currentNumberOfClasses: {
       get() {
-        return parseInt(this.persons.length / this.splitAfter) + 1;
+        return (
+          parseInt(this.meeting.persons.length / this.meeting.splitAfter) + 1
+        );
       },
     },
   },
   watch: {
-    persons() {
+    meeting() {
       this.updateTable();
     },
   },
   created() {
-    console.log("created");
-    this.$store.dispatch("fetchPersons");
+    this.$store.dispatch("getMeeting", this.meetingId);
   },
 };
 </script>
