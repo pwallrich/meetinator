@@ -2,7 +2,8 @@
   <div>
     <h1>Meeting Creator</h1>
     <v-alert color="green lighten-2" v-if="url" dark>
-      Ein neuer Fragebogen wurde unter {{ url }} erstellt
+      Ein neuer Fragebogen wurde unter
+      <a :href="url">{{ url }}</a> erstellt
     </v-alert>
     <v-alert color="red lighten-2" v-if="errorMessage" dark>
       Beim erstellen des Fragebogen ist ein Fehler aufgetreten
@@ -104,6 +105,7 @@ export default {
         numberOfClasses: this.numberOfClasses,
         splitAfter: this.splitAfter,
         extras: this.extras,
+        persons: [],
       };
       db.createNewMeeting(meeting)
         .then((id) => {

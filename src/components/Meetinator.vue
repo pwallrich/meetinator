@@ -94,36 +94,45 @@ export default {
       this.resetErrorState();
       if (
         this.persons !== undefined &&
-        this.persons.find((element) => element.name == user.name)
+        this.persons.find((element) => element.name === user.name)
       ) {
         this.state.personAlreadyPresent = true;
         return;
       }
       this.$store
-        .dispatch("addPerson", user)
+        .dispatch("addPerson", {
+          person: user,
+          meetingId: this.meetingId,
+        })
         .then(() => {
           this.state.successfullyAdded = true;
           this.state.isAdding = false;
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           this.state.errorFromAdding = true;
         });
     },
     deleteRow: function (item) {
       this.resetErrorState();
+      console.log(item);
       this.$store
-        .dispatch("removePerson", item)
+        .dispatch("removePerson", {
+          person: item,
+          meetingId: this.meetingId,
+        })
         .then(() => {
           this.state.successfullyDeleted = true;
           window.scrollTo(0, 0);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error);
           this.state.errorFromDeleting = true;
           window.scrollTo(0, 0);
         });
     },
     updateTable: function () {
-      if (this.meeting === undefined) {
+      if (this.meeting === undefined || this.meeting.persons === undefined) {
         return;
       }
       var i,

@@ -25,18 +25,18 @@ export const store = new Vuex.Store({
     persons: state => state.meeting.persons
   },
   actions: {
-    async addPerson(_, person) {
-      const id = this.state.meeting.id
-      return db.addPerson(person, id)
+    async addPerson(_, data) {
+      console.log(data)
+      return db.addPerson(data.person, data.meetingId)
         .then(() => {
-          this.dispatch('getMeeting', this.state.meeting.id)
+          this.dispatch('getMeeting', data.meetingId)
         })
     },
-    async removePerson(_, person) {
-      const id = this.state.meeting.id
-      return db.removePerson(person, id)
+    async removePerson(_, data) {
+      console.log(data)
+      return db.removePerson(data.person, data.meetingId)
         .then(() => {
-          this.dispatch('getMeeting', this.state.meeting.id)
+          this.dispatch('getMeeting', data.meetingId)
         })
     },
     async getMeeting(_, meetingId) {
