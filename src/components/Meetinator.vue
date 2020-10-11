@@ -9,14 +9,25 @@
       <v-alert border="top" color="red lighten-2" v-if="!canAddPerson" dark>
         Leider sind die Kurse schon voll
       </v-alert>
+      <v-alert
+        border="top"
+        color="red lighten-2"
+        v-if="personAlreadyPresent"
+        dark
+      >
+        Die Person ist schon hinzugefügt
+      </v-alert>
     </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip label v-if="meeting.numberOfClasses > 1">
+      <v-chip
+        label
+        v-if="meeting.numberOfClasses > 1 && currentNumberOfClasses > 1"
+        class="mr-3"
+      >
         Kurs {{ index + 1 }}
       </v-chip>
-      <v-chip label class="ml-3">
-        {{ meeting.persons.length }} / {{ meeting.splitAfter }} Personen
-        angemeldet
+      <v-chip label>
+        {{ persons.length }} / {{ meeting.splitAfter }} Personen angemeldet
       </v-chip>
       <Table
         :offset="index"
@@ -31,6 +42,7 @@
 <script>
 import Table from "./Table";
 import PersonInput from "./PersonInput";
+
 export default {
   components: {
     Table,
@@ -40,6 +52,8 @@ export default {
     return {
       isAdding: false,
       splitPersons: [],
+      personAlreadyPresent: false,
+      succesfullyAddded: false,
     };
   },
   props: {
@@ -50,12 +64,17 @@ export default {
       this.isAdding = true;
     },
     addUser: function (user) {
+      if (this.persons.find((element) => element.name == user.name)) {
+        this.personAlreadyPresent = true;
+        return;
+      }
       this.$store.dispatch("addPerson", user);
       this.isAdding = false;
     },
-    deleteRow: function (index, offset) {
-      const indexToDelete = index + offset * this.meeting.splitAfter;
-      this.$store.dispatch("removePersonAt", indexToDelete);
+    deleteRow: function (item) {
+      console.log("should delete");
+      console.log(item);
+      this.$store.dispatch("removePerson", item);
     },
     updateTable: function () {
       if (this.meeting === undefined) {
@@ -66,12 +85,12 @@ export default {
 
       this.splitPersons = [];
       for (
-        i = 0, j = this.meeting.persons.length;
+        i = 0, j = this.persons.length;
         i < j;
         i += this.meeting.splitAfter
       ) {
         this.splitPersons.push(
-          this.meeting.persons.slice(i, i + this.meeting.splitAfter)
+          this.persons.slice(i, i + this.meeting.splitAfter)
         );
       }
     },
@@ -79,27 +98,29 @@ export default {
   computed: {
     meeting: {
       get() {
-        console.log("meeting");
         return this.$store.getters.meeting;
+      },
+    },
+    persons: {
+      get() {
+        return this.$store.getters.persons;
       },
     },
     canAddPerson: {
       get() {
-        if (this.meeting.persons !== undefined) {
+        if (this.persons !== undefined) {
           return (
-            this.meeting.persons.length <
+            this.persons.length <
             this.meeting.splitAfter * this.meeting.numberOfClasses
           );
         } else {
-          return false;
+          return true;
         }
       },
     },
     currentNumberOfClasses: {
       get() {
-        return (
-          parseInt(this.meeting.persons.length / this.meeting.splitAfter) + 1
-        );
+        return parseInt(this.persons.length / this.meeting.splitAfter) + 1;
       },
     },
   },

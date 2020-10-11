@@ -5,10 +5,12 @@
         <v-list-item-group color="primary">
           <v-list-item v-for="(item, index) in items" :key="index">
             <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
+              <v-list-item-title
+                >{{ index + 1 }}. {{ item.name }}</v-list-item-title
+              >
             </v-list-item-content>
             <v-list-item-icon>
-              <v-btn @click="shouldDelete(index)">
+              <v-btn @click="shouldDelete(item)">
                 <v-icon>mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-list-item-icon>
@@ -25,15 +27,14 @@ export default {
     return {};
   },
   methods: {
-    shouldDelete: function (index) {
-      this.deleteRow(index, this.offset);
+    shouldDelete: function (item) {
+      this.deleteRow(item);
     },
   },
   mounted() {},
   props: {
     deleteRow: Function,
     items: Array,
-    offset: Number,
   },
 };
 </script>

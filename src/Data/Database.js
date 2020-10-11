@@ -1,4 +1,6 @@
 import * as fb from '../firebaseDatabase'
+import * as firebase from 'firebase/app'
+import 'firebase/firestore'
 
 const db = {
     async updateMeeting(meeting) {
@@ -15,9 +17,23 @@ const db = {
     async getMeeting(id) {
         console.log("getting meeting for: " + id)
         const doc = await fb.personsCollection.doc(id).get()
-        let data = doc.data()
-        data.id = id
-        return data
+        return doc.data()
+    },
+    async removePerson(person, id) {
+        console.log("inside database")
+        await fb.personsCollection.doc(id)
+            .update({
+                persons: firebase.firestore.FieldValue.arrayRemove(person)
+
+            })
+        console.log("inside database after await")
+    },
+    async addPerson(person, id) {
+        console.log("inside database")
+        await fb.personsCollection.doc(id)
+            .update({
+                persons: firebase.firestore.FieldValue.arrayUnion(person)
+            })
     }
 }
 
