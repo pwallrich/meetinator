@@ -18,6 +18,18 @@ const db = {
             .update({
                 persons: firebase.firestore.FieldValue.arrayUnion(person)
             })
+    },
+    async createNewMeeting(meeting) {
+        const dateString = meeting.startDate
+        const timestamp = firebase.firestore.Timestamp.fromDate(new Date(dateString))
+
+        let newMeeting = meeting
+        newMeeting.startDate = timestamp
+        return fb.personsCollection
+            .add(newMeeting)
+            .then(ref => {
+                return ref.id
+            })
     }
 }
 

@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import Table from "./Table";
-import PersonInput from "./PersonInput";
+import Table from "../views/Table";
+import PersonInput from "../views/PersonInput";
 
 export default {
   components: {
