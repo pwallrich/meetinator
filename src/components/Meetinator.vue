@@ -20,13 +20,13 @@
       Die Person ist schon hinzugefügt
     </v-alert>
     <v-alert color="red lighten-2" v-if="state.errorFromAdding" dark>
-      Leider ist beim hinzüfgen ein Fehler passiert. Bitte nochmal versuchen.
+      Leider ist beim Hinzüfgen ein Fehler passiert. Bitte nochmal versuchen.
     </v-alert>
     <v-alert color="green lighten-2" v-if="state.successfullyAdded" dark>
       Erfolgreich fürs Training eingetragen
     </v-alert>
     <v-alert color="red lighten-2" v-if="state.errorFromDeleting" dark>
-      Leider ist beim löschen ein Fehler passiert. Bitte nochmal versuchen.
+      Leider ist beim Löschen ein Fehler passiert. Bitte nochmal versuchen.
     </v-alert>
     <v-alert color="green lighten-2" v-if="state.successfullyDeleted" dark>
       Eintrag erfolgreich gelöscht
@@ -132,7 +132,7 @@ export default {
       }
     },
     resetErrorState() {
-      this.state.succesfullyAddded = false;
+      this.state.successfullyAdded = false;
       this.state.errorFromAdding = false;
       this.state.successfullyDeleted = false;
       this.state.errorFromDeleting = false;

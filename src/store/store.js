@@ -27,24 +27,17 @@ export const store = new Vuex.Store({
   actions: {
     async addPerson(_, person) {
       const id = this.state.meeting.id
-      await db.addPerson(person, id)
-      this.dispatch('getMeeting', this.state.meeting.id)
-      // let meeting = this.state.meeting
-      // let persons = meeting.persons.map((abc) => {
-      //   return {
-      //     name: abc.name,
-      //   }
-      // })
-      // persons.push(person)
-      // meeting.persons = persons
-      // await db.updateMeeting(meeting)
-      // this.dispatch('getMeeting', this.state.meeting.id)
+      return db.addPerson(person, id)
+        .then(() => {
+          this.dispatch('getMeeting', this.state.meeting.id)
+        })
     },
     async removePerson(_, person) {
-      console.log("in store")
       const id = this.state.meeting.id
-      await db.removePerson(person, id)
-      this.dispatch('getMeeting', this.state.meeting.id)
+      return db.removePerson(person, id)
+        .then(() => {
+          this.dispatch('getMeeting', this.state.meeting.id)
+        })
     },
     async getMeeting(_, meetingId) {
       let ref = await db.getMeeting(meetingId)

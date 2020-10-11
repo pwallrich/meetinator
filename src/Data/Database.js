@@ -24,13 +24,11 @@ const db = {
         await fb.personsCollection.doc(id)
             .update({
                 persons: firebase.firestore.FieldValue.arrayRemove(person)
-
             })
         console.log("inside database after await")
     },
     async addPerson(person, id) {
-        console.log("inside database")
-        await fb.personsCollection.doc(id)
+        return fb.personsCollection.doc(id)
             .update({
                 persons: firebase.firestore.FieldValue.arrayUnion(person)
             })
