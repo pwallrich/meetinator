@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="input mb-5">
+    <div class="mb-2">
+      <h1>Teilnehmerliste für {{ meetingTime }}</h1>
+    </div>
+    <div class="inputs mb-5">
       <PersonInput :addUser="addUser" v-if="state.isAdding" />
       <div v-else>
         <v-btn @click="showAddView" v-if="canAddPerson">
@@ -16,30 +19,36 @@
         </v-alert>
       </div>
     </div>
-    <v-alert color="red lighten-2" v-if="state.personAlreadyPresent" dark>
-      Die Person ist schon hinzugefügt
-    </v-alert>
-    <v-alert color="red lighten-2" v-if="state.errorFromAdding" dark>
-      Leider ist beim Hinzüfgen ein Fehler passiert. Bitte nochmal versuchen.
-    </v-alert>
-    <v-alert color="green lighten-2" v-if="state.successfullyAdded" dark>
-      Erfolgreich fürs Training eingetragen
-    </v-alert>
-    <v-alert color="red lighten-2" v-if="state.errorFromDeleting" dark>
-      Leider ist beim Löschen ein Fehler passiert. Bitte nochmal versuchen.
-    </v-alert>
-    <v-alert color="green lighten-2" v-if="state.successfullyDeleted" dark>
-      Eintrag erfolgreich gelöscht
-    </v-alert>
+    <div>
+      <v-alert color="red lighten-2" v-if="state.personAlreadyPresent" dark>
+        Die Person ist schon hinzugefügt
+      </v-alert>
+      <v-alert color="red lighten-2" v-if="state.errorFromAdding" dark>
+        Leider ist beim Hinzüfgen ein Fehler passiert. Bitte nochmal versuchen.
+      </v-alert>
+      <v-alert color="green lighten-2" v-if="state.successfullyAdded" dark>
+        Erfolgreich fürs Training eingetragen
+      </v-alert>
+      <v-alert color="red lighten-2" v-if="state.errorFromDeleting" dark>
+        Leider ist beim Löschen ein Fehler passiert. Bitte nochmal versuchen.
+      </v-alert>
+      <v-alert color="green lighten-2" v-if="state.successfullyDeleted" dark>
+        Eintrag erfolgreich gelöscht
+      </v-alert>
+    </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
       <v-chip
         label
+        large
         v-if="meeting.numberOfClasses > 1 && currentNumberOfClasses > 1"
         class="mr-3"
       >
         Kurs {{ index + 1 }}
       </v-chip>
-      <v-chip label>
+      <v-chip label large class="mr-3">
+        {{ meeting.extras[index] }}
+      </v-chip>
+      <v-chip label large>
         {{ persons.length }} / {{ meeting.splitAfter }} Personen angemeldet
       </v-chip>
       <Table
@@ -166,6 +175,20 @@ export default {
       get() {
         return parseInt(this.persons.length / this.meeting.splitAfter) + 1;
       },
+    },
+    meetingTime() {
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      if (this.meeting.startDate === undefined) {
+        return;
+      }
+      return this.meeting.startDate
+        .toDate()
+        .toLocaleDateString("de-DE", options);
     },
   },
   watch: {
