@@ -32,6 +32,7 @@ export const store = new Vuex.Store({
       })
       persons.push(person)
       db.updatePersons(persons)
+      this.dispatch('fetchPersons')
     },
     async removePersonAt(_, indexToDelete) {
       let persons = this.state.persons.map((abc) => {
@@ -41,6 +42,11 @@ export const store = new Vuex.Store({
       })
       persons.splice(indexToDelete, 1)
       db.updatePersons(persons)
+      this.dispatch('fetchPersons')
+    },
+    async fetchPersons() {
+      let ref = await db.getPersons()
+      this.state.persons = ref
     }
   }
 })

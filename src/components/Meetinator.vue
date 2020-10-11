@@ -87,5 +87,9 @@ export default {
       this.updateTable();
     },
   },
+  created() {
+    console.log("created");
+    this.$store.dispatch("fetchPersons");
+  },
 };
 </script>
