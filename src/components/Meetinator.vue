@@ -1,23 +1,36 @@
 <template>
   <div>
     <div class="input mb-5">
-      <PersonInput :addUser="addUser" v-if="isAdding" />
-      <v-btn @click="showAddView" v-if="!isAdding && canAddPerson">
-        <v-icon left large color="green">mdi-plus-circle</v-icon>
-        Teilnehmen
-      </v-btn>
-      <v-alert border="top" color="red lighten-2" v-if="!canAddPerson" dark>
-        Leider sind die Kurse schon voll
-      </v-alert>
-      <v-alert
-        border="top"
-        color="red lighten-2"
-        v-if="personAlreadyPresent"
-        dark
-      >
-        Die Person ist schon hinzugefügt
-      </v-alert>
+      <PersonInput :addUser="addUser" v-if="state.isAdding" />
+      <div v-else>
+        <v-btn @click="showAddView" v-if="canAddPerson">
+          <v-icon left large color="green">mdi-plus-circle</v-icon>
+          Teilnehmen
+        </v-btn>
+        <v-alert
+          color="red lighten-2"
+          v-if="!canAddPerson && !state.successfullyAdded"
+          dark
+        >
+          Leider sind die Kurse schon voll
+        </v-alert>
+      </div>
     </div>
+    <v-alert color="red lighten-2" v-if="state.personAlreadyPresent" dark>
+      Die Person ist schon hinzugefügt
+    </v-alert>
+    <v-alert color="red lighten-2" v-if="state.errorFromAdding" dark>
+      Leider ist beim hinzüfgen ein Fehler passiert. Bitte nochmal versuchen.
+    </v-alert>
+    <v-alert color="green lighten-2" v-if="state.successfullyAdded" dark>
+      Erfolgreich fürs Training eingetragen
+    </v-alert>
+    <v-alert color="red lighten-2" v-if="state.errorFromDeleting" dark>
+      Leider ist beim löschen ein Fehler passiert. Bitte nochmal versuchen.
+    </v-alert>
+    <v-alert color="green lighten-2" v-if="state.successfullyDeleted" dark>
+      Eintrag erfolgreich gelöscht
+    </v-alert>
     <div v-for="(persons, index) in splitPersons" :key="index">
       <v-chip
         label
@@ -50,10 +63,15 @@ export default {
   },
   data() {
     return {
-      isAdding: false,
       splitPersons: [],
-      personAlreadyPresent: false,
-      succesfullyAddded: false,
+      state: {
+        isAdding: false,
+        personAlreadyPresent: false,
+        errorFromAdding: false,
+        errorFromDeleting: false,
+        successfullyDeleted: false,
+        successfullyAdded: false,
+      },
     };
   },
   props: {
@@ -61,20 +79,39 @@ export default {
   },
   methods: {
     showAddView: function () {
-      this.isAdding = true;
+      this.state.isAdding = true;
     },
     addUser: function (user) {
-      if (this.persons.find((element) => element.name == user.name)) {
-        this.personAlreadyPresent = true;
+      this.resetErrorState();
+      if (
+        this.persons !== undefined &&
+        this.persons.find((element) => element.name == user.name)
+      ) {
+        this.state.personAlreadyPresent = true;
         return;
       }
-      this.$store.dispatch("addPerson", user);
-      this.isAdding = false;
+      this.$store
+        .dispatch("addPerson", user)
+        .then(() => {
+          this.state.successfullyAdded = true;
+          this.state.isAdding = false;
+        })
+        .catch(() => {
+          this.state.errorFromAdding = true;
+        });
     },
     deleteRow: function (item) {
-      console.log("should delete");
-      console.log(item);
-      this.$store.dispatch("removePerson", item);
+      this.resetErrorState();
+      this.$store
+        .dispatch("removePerson", item)
+        .then(() => {
+          this.state.successfullyDeleted = true;
+          window.scrollTo(0, 0);
+        })
+        .catch(() => {
+          this.state.errorFromDeleting = true;
+          window.scrollTo(0, 0);
+        });
     },
     updateTable: function () {
       if (this.meeting === undefined) {
@@ -93,6 +130,13 @@ export default {
           this.persons.slice(i, i + this.meeting.splitAfter)
         );
       }
+    },
+    resetErrorState() {
+      this.state.succesfullyAddded = false;
+      this.state.errorFromAdding = false;
+      this.state.successfullyDeleted = false;
+      this.state.errorFromDeleting = false;
+      this.state.personAlreadyPresent = false;
     },
   },
   computed: {
