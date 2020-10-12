@@ -1,10 +1,7 @@
 <template>
   <div>
     <h1>Meeting Creator</h1>
-    <v-alert color="green lighten-2" v-if="url" dark>
-      Ein neuer Fragebogen wurde unter
-      <a :href="url">{{ url }}</a> erstellt
-    </v-alert>
+
     <v-alert color="red lighten-2" v-if="errorMessage" dark>
       Beim erstellen des Fragebogen ist ein Fehler aufgetreten
     </v-alert>
@@ -55,6 +52,8 @@
           :key="index"
           :label="'Extrainfos für Gruppe ' + index"
           v-model="extras[index - 1]"
+          required
+          :rules="[(v) => !!v || 'Extrainfos werden benötigt.']"
         >
         </v-text-field>
 
@@ -109,7 +108,10 @@ export default {
       };
       db.createNewMeeting(meeting)
         .then((id) => {
-          this.url = "https://fistudios.de/#/meetinator/" + id;
+          this.$router.push({
+            name: "meetingCreated",
+            params: { meetingId: id },
+          });
         })
         .catch(() => {
           this.errorMessage = true;
