@@ -1,14 +1,20 @@
 <template>
   <div>
-    <div class="mb-2">
+    <div class="mb-3">
       <h3>Liste für {{ meetingTime }}</h3>
     </div>
     <div class="inputs mb-5">
       <PersonInput :addUser="addUser" v-if="state.isAdding" />
       <div v-else>
-        <v-btn @click="showAddView" v-if="canAddPerson">
-          <v-icon left large color="green">mdi-plus-circle</v-icon>
-          Teilnehmen
+        <v-btn
+          @click="showAddView"
+          v-if="canAddPerson"
+          color="primary"
+          x-large
+          block
+        >
+          <v-icon left x-large>mdi-plus-circle</v-icon>
+          <span class="ml-2">Teilnehmen</span>
         </v-btn>
         <v-alert
           color="red lighten-2"
@@ -19,10 +25,6 @@
         </v-alert>
       </div>
     </div>
-    <ProgressBars
-      :numberOfItems="meeting.numberOfClasses"
-      :status="filledPercentageOfClasses"
-    />
     <div>
       <v-alert color="red lighten-2" v-if="state.personAlreadyPresent" dark>
         Die Person ist schon hinzugefügt
@@ -40,6 +42,15 @@
         Eintrag erfolgreich gelöscht
       </v-alert>
     </div>
+    <v-alert outlined rounded class="mb-3" v-if="canAddPerson">
+      <div>
+        <strong>
+          {{ meeting.persons.length }} /
+          {{ meeting.numberOfClasses * meeting.splitAfter }}</strong
+        >
+        Teilnehmer eingetragen
+      </div>
+    </v-alert>
     <div v-for="(persons, index) in splitPersons" :key="index">
       <v-chip label large>
         {{ meeting.extras[index] }}
@@ -58,13 +69,11 @@
 <script>
 import Table from "../components/Table";
 import PersonInput from "../components/PersonInput";
-import ProgressBars from "../components/ProgressBars";
 
 export default {
   components: {
     Table,
     PersonInput,
-    ProgressBars,
   },
   data() {
     return {
