@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mb-2">
-      <h1>Teilnehmerliste für {{ meetingTime }}</h1>
+      <h3>Liste für {{ meetingTime }}</h3>
     </div>
     <div class="inputs mb-5">
       <PersonInput :addUser="addUser" v-if="state.isAdding" />
@@ -19,6 +19,10 @@
         </v-alert>
       </div>
     </div>
+    <ProgressBars
+      :numberOfItems="meeting.numberOfClasses"
+      :status="filledPercentageOfClasses"
+    />
     <div>
       <v-alert color="red lighten-2" v-if="state.personAlreadyPresent" dark>
         Die Person ist schon hinzugefügt
@@ -37,11 +41,8 @@
       </v-alert>
     </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip label large class="mr-3">
-        {{ meeting.extras[index] }}
-      </v-chip>
       <v-chip label large>
-        {{ persons.length }} / {{ meeting.splitAfter }} Personen angemeldet
+        {{ meeting.extras[index] }}
       </v-chip>
       <Table
         :offset="index"
@@ -50,17 +51,20 @@
         class="mb-5"
       />
     </div>
+    <v-footer fixed class="font-weight-medium mb-15"> </v-footer>
   </div>
 </template>
 
 <script>
 import Table from "../components/Table";
 import PersonInput from "../components/PersonInput";
+import ProgressBars from "../components/ProgressBars";
 
 export default {
   components: {
     Table,
     PersonInput,
+    ProgressBars,
   },
   data() {
     return {
@@ -77,6 +81,61 @@ export default {
   },
   props: {
     meetingId: String,
+  },
+  computed: {
+    meeting: {
+      get() {
+        return this.$store.getters.meeting;
+      },
+    },
+    persons: {
+      get() {
+        return this.$store.getters.persons;
+      },
+    },
+    canAddPerson: {
+      get() {
+        if (this.persons !== undefined) {
+          return (
+            this.persons.length <
+            this.meeting.splitAfter * this.meeting.numberOfClasses
+          );
+        } else {
+          return true;
+        }
+      },
+    },
+    meetingTime() {
+      const options = {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      };
+      if (this.meeting.startDate === undefined) {
+        return;
+      }
+      return this.meeting.startDate
+        .toDate()
+        .toLocaleDateString("de-DE", options);
+    },
+    filledPercentageOfClasses() {
+      let result = [];
+      for (let i = 0; i < this.meeting.numberOfClasses; i++) {
+        let participating = 0;
+        let value = 0;
+        if (!(this.splitPersons[i] === undefined)) {
+          value = (this.splitPersons[i].length / this.meeting.splitAfter) * 100;
+          participating = this.splitPersons[i].length;
+        }
+        result.push({
+          value: value,
+          checkedIn: participating,
+          totalCount: this.meeting.splitAfter,
+          description: this.meeting.extras[i],
+        });
+      }
+      return result;
+    },
   },
   methods: {
     showAddView: function () {
@@ -147,49 +206,6 @@ export default {
       this.state.successfullyDeleted = false;
       this.state.errorFromDeleting = false;
       this.state.personAlreadyPresent = false;
-    },
-  },
-  computed: {
-    meeting: {
-      get() {
-        return this.$store.getters.meeting;
-      },
-    },
-    persons: {
-      get() {
-        return this.$store.getters.persons;
-      },
-    },
-    canAddPerson: {
-      get() {
-        if (this.persons !== undefined) {
-          return (
-            this.persons.length <
-            this.meeting.splitAfter * this.meeting.numberOfClasses
-          );
-        } else {
-          return true;
-        }
-      },
-    },
-    currentNumberOfClasses: {
-      get() {
-        return parseInt(this.persons.length / this.meeting.splitAfter) + 1;
-      },
-    },
-    meetingTime() {
-      const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      };
-      if (this.meeting.startDate === undefined) {
-        return;
-      }
-      return this.meeting.startDate
-        .toDate()
-        .toLocaleDateString("de-DE", options);
     },
   },
   watch: {
