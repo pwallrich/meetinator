@@ -37,14 +37,6 @@
       </v-alert>
     </div>
     <div v-for="(persons, index) in splitPersons" :key="index">
-      <v-chip
-        label
-        large
-        v-if="meeting.numberOfClasses > 1 && currentNumberOfClasses > 1"
-        class="mr-3"
-      >
-        Kurs {{ index + 1 }}
-      </v-chip>
       <v-chip label large class="mr-3">
         {{ meeting.extras[index] }}
       </v-chip>
