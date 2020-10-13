@@ -12,7 +12,9 @@ export default {
   },
   computed: {
     url() {
-      return "https://fistudios.de/#/meetinator/" + this.meetingId;
+      let currentUrl =
+        "http://" + location.host + "/#/meetinator/" + this.meetingId;
+      return currentUrl;
     },
   },
 };
